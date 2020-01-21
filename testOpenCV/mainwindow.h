@@ -10,10 +10,13 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/objdetect/objdetect.hpp>
 
 namespace Ui {
 class MainWindow;
 }
+
+// see mainwindow.cpp for description of methods
 
 class MainWindow : public QMainWindow
 {
@@ -21,6 +24,7 @@ class MainWindow : public QMainWindow
 
 public:
     QImage getQImageFromFrame(cv::Mat frame);
+    void faceDetect(cv::Mat frame);
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
@@ -31,6 +35,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture webcam;
+    cv::CascadeClassifier face_cascade;
 };
 
 #endif // MAINWINDOW_H
