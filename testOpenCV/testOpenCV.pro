@@ -42,3 +42,4 @@ LIBS += D:\buildsrcopencv\opencv_build\bin\libopencv_imgproc320.dll
 LIBS += D:\buildsrcopencv\opencv_build\bin\libopencv_features2d320.dll
 LIBS += D:\buildsrcopencv\opencv_build\bin\libopencv_calib3d320.dll
 LIBS += D:\buildsrcopencv\opencv_build\bin\libopencv_videoio320.dll
+LIBS += D:\buildsrcopencv\opencv_build\bin\libopencv_objdetect320.dll
