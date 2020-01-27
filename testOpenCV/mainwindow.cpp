@@ -3,12 +3,17 @@
 
 #include <QTimer>
 #include <QMessageBox>
+#include <QString>
+#include <QDateTime>
+#include <iostream>
 
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
+
 
 QImage MainWindow::getQImageFromFrame(cv::Mat frame) {
 //converts the color model of the image from RGB to BGR because OpenCV uses BGR
@@ -17,32 +22,36 @@ return QImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB
 }
 
 void MainWindow::faceDetect(cv::Mat frame) {
-// face detection algorithm by @okostyukova added
 std::vector<cv::Rect> faces;
 face_cascade.detectMultiScale(frame, faces, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, cv::Size(30, 30));
 int act_size = int(faces.size());
 cv::Mat curr_face;
 QImage face;
+// this line corresponds to the extraction of the frame number. It gets Unix timestamp since 1970/01/01 in msecs
+// and exctracts last 5 numbers as a timestamp (or a consecutive part of a name) of an image capture.
+// this allows to have consecutively marked photos during 1 min of observation
+double offset = (double)(((long long int) QDateTime::currentMSecsSinceEpoch()) % 100000);
+QString im_name = "D:/c++/testOpenCV/data/image " + QString::number(offset) + ".jpg";
 for (int i = 0; i < act_size; i++)
  {
  //cv::Point center(faces[i].x + faces[i].width*0.5, faces[i].y + faces[i].height*0.5); // for Ellipse drawing
  //cv::ellipse(frame, center, cv::Size(faces[i].width*0.5, faces[i].height*0.5), 0, 0, 360, cv::Scalar(255, 17, 0), 4, 8, 0); // for Ellipse drawing
  cv::rectangle(frame, faces[i], cv::Scalar(255,17,0));
  if (i==0) {
-    // face object can later be propagated to the NN and used there. Make a return from the current function and make it not void, but QImage.
-    // also possible to be done with a vector to operate on
-    // we show only face 0
     curr_face = frame(faces[i]);
     face = getQImageFromFrame(curr_face);
     ui->face->setPixmap(QPixmap::fromImage(face));
-    //double conversion of the face back
     cv::cvtColor(curr_face, curr_face, CV_RGB2BGR);
+    // adding saving to file
+    // change PATH in im_name up to the word "/data" to operate on your PC.
+    // You are able to choose the capture folder here
+    cv::imwrite(cv::String(im_name.toStdString()), curr_face);
  }
  }
 }
 
 void MainWindow::displayFrame() {
-//capture a frame from the webcam and display it into the GUI
+//capture a frame from the webcam
 if (webcam.isOpened()) {
 
 ui->debug->setText("Face detected (1st entry)");
@@ -62,17 +71,13 @@ ui->label->setPixmap(QPixmap::fromImage(image));
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
-    // init of the main GUI
 {
     ui->setupUi(this);
-    // face detection algorithm initialized
     face_cascade.load("D:/c++/testOpenCV/haarcascade_frontalface_alt2.xml"); // change this PATH to operate on your PC.
     connect (ui->startButton, SIGNAL(released()), this, SLOT(Operate()));
 }
 
 void MainWindow::Operate() {
-    // On-button-pressed actions. Closing webcam if open and opening it for capture.
-    // a timing method by FPS rate is used to trigger face detection and video grab
     if (webcam.isOpened()) {
         ui->startButton->setText("Start video capture");
         webcam.release();

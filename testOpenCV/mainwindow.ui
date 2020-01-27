@@ -27,17 +27,17 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QLabel" name="debug">
+   <widget class="QLabel" name="face">
     <property name="geometry">
      <rect>
       <x>660</x>
-      <y>450</y>
-      <width>111</width>
-      <height>41</height>
+      <y>430</y>
+      <width>241</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="text">
-     <string>Debug</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -47,6 +47,19 @@
       <y>60</y>
       <width>761</width>
       <height>311</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="debug">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>540</y>
+      <width>131</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="text">

@@ -16,8 +16,6 @@ namespace Ui {
 class MainWindow;
 }
 
-// see mainwindow.cpp for description of methods
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
