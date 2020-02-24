@@ -6,6 +6,9 @@
 #include <QPixmap>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QProcess>
+#include <QStringList>
+#include <QString>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -34,6 +37,9 @@ private:
     Ui::MainWindow *ui;
     cv::VideoCapture webcam;
     cv::CascadeClassifier face_cascade;
+    QProcess *cmd;
+    QString program;
+    QString script;
 };
 
 #endif // MAINWINDOW_H
