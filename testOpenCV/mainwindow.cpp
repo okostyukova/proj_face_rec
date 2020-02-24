@@ -5,7 +5,11 @@
 #include <QMessageBox>
 #include <QString>
 #include <QDateTime>
-#include <iostream>
+#include <QProcess>
+#include <QStringList>
+#include <QDebug>
+#include <QByteArray>
+#include <QtCore/QtCore>
 
 
 #include <opencv2/core/core.hpp>
@@ -46,6 +50,11 @@ for (int i = 0; i < act_size; i++)
     // change PATH in im_name up to the word "/data" to operate on your PC.
     // You are able to choose the capture folder here
     cv::imwrite(cv::String(im_name.toStdString()), curr_face);
+
+    //call for cnn
+    cmd->start(program,QStringList()<< script << im_name);
+    cmd->waitForFinished();
+    qDebug() << cmd->readAllStandardOutput();
  }
  }
 }
@@ -75,6 +84,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     face_cascade.load("D:/c++/testOpenCV/haarcascade_frontalface_alt2.xml"); // change this PATH to operate on your PC.
     connect (ui->startButton, SIGNAL(released()), this, SLOT(Operate()));
+    this -> cmd = new QProcess();
+    this -> program = "python";
+    this -> script = "D:/c++/testOpenCV/a.py";
 }
 
 void MainWindow::Operate() {
@@ -90,7 +102,7 @@ void MainWindow::Operate() {
     ui->startButton->setText("Stop capture");
     webcam.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     webcam.set(CV_CAP_PROP_FRAME_HEIGHT, 640);
-    int fps = 1000/25;
+    int fps = 1000/1;
     QTimer* qTimer = new QTimer(this);
     qTimer->setInterval(fps);
     qTimer->start();
