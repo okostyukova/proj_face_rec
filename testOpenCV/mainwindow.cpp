@@ -3,6 +3,13 @@
 
 #include <QTimer>
 #include <QMessageBox>
+#include <QString>
+#include <QDateTime>
+#include <QProcess>
+#include <QStringList>
+#include <QDebug>
+#include <QByteArray>
+#include <QtCore/QtCore>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -33,6 +40,15 @@ for (int i = 0, j = 0; i < act_size; i++, j++)
     ui->face->setPixmap(QPixmap::fromImage(face));
     //double conversion of the face back
     cv::cvtColor(curr_face, curr_face, CV_RGB2BGR);
+    // adding saving to file
+    // change PATH in im_name up to the word "/data" to operate on your PC.
+    // You are able to choose the capture folder here
+    cv::imwrite(cv::String(im_name.toStdString()), curr_face);
+
+    //call for cnn
+    cmd->start(program,QStringList()<< script << im_name);
+    cmd->waitForFinished();
+    qDebug() << cmd->readAllStandardOutput();
 
     //save image for cnn
     QString filename = "image" + j;
@@ -68,6 +84,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // face detection algorithm initialized
     face_cascade.load("/home/olga/opencv/data/haarcascades/haarcascade_frontalface_alt2.xml"); // change this PATH to operate on your PC.
     connect (ui->startButton, SIGNAL(released()), this, SLOT(Operate()));
+    this -> cmd = new QProcess();
+    this -> program = "python";
+    this -> script = "D:/c++/testOpenCV/a.py";
 }
 
 void MainWindow::Operate() {
@@ -85,7 +104,7 @@ void MainWindow::Operate() {
     ui->startButton->setText("Stop capture");
     webcam.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     webcam.set(CV_CAP_PROP_FRAME_HEIGHT, 640);
-    int fps = 1000/25;
+    int fps = 1000/1;
     QTimer* qTimer = new QTimer(this);
     qTimer->setInterval(fps);
     qTimer->start();
