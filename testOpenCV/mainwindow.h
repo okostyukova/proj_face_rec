@@ -32,6 +32,8 @@ public:
 private slots:
     void displayFrame();
     void Operate ();
+    void changeTiming();
+    void BCIData();
 
 private:
     Ui::MainWindow *ui;
@@ -40,6 +42,8 @@ private:
     QProcess *cmd;
     QString program;
     QString script;
+    int counter;
+    int secs_counter;
 };
 
 #endif // MAINWINDOW_H
