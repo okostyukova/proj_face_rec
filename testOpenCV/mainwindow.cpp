@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QByteArray>
 #include <QtCore/QtCore>
+#include <QFont>
 
 #include <windows.h>
 #include <iostream>
@@ -192,9 +193,11 @@ void MainWindow::BCIData() {
      ui->Graph->graph(6)->setData(x,foc);
      ui->Graph->graph(6)->setPen(QPen(Qt::darkBlue));
      ui->Graph->graph(6)->setName("Focus Scaled");
-
+     QFont serifFont("Times",10);
      ui->Graph->xAxis->setLabel("sec");
+     ui->Graph->xAxis->setLabelFont(serifFont);
      ui->Graph->yAxis->setLabel("PerformanceMetrics");
+     ui->Graph->yAxis->setLabelFont(serifFont);
      ui->Graph->xAxis->setRange(0,l*10);
      ui->Graph->yAxis->setRange(min, max);
 
@@ -206,7 +209,6 @@ void MainWindow::displayFrame() {
 //capture a frame from the webcam
 if (webcam.isOpened()) {
 
-ui->debug->setText("Face detected (1st entry)");
 cv::Mat frame;
 webcam.grab();
 webcam.read(frame);
@@ -237,6 +239,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this -> script = "D:/c++/testOpenCV/a.py";
     this -> counter = 0;
     this -> secs_counter = 0;
+    ui->debug->setText("Face detected (1st entry)");
 }
 
 void MainWindow::Operate() {
